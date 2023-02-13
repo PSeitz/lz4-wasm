@@ -8,6 +8,3 @@ npm install
 npm start
 Open Browser
 ```
-
-
-

@@ -1,3 +1,6 @@
+
+https://pseitz.github.io/lz4-wasm/
+
 <div align="center">
 
   <h1><code>lz4-wasm</code></h1>

@@ -8,34 +8,48 @@ import test_input_65k from './benches/compression_65k.txt'
 import test_input_34k from './benches/compression_34k.txt'
 import test_input_1k from './benches/compression_1k.txt'
 
-function addText(text) {
-    // let body = document.querySelectorAll('body');
-    var div = document.createElement('div')
+//function addText(text) {
+    //// let body = document.querySelectorAll('body');
+    //var div = document.createElement('div')
+    //div.innerHTML = text
+
+    //div.style['font-size'] = '40px'
+
+    //document.getElementById('body').appendChild(div)
+//}
+
+function addCell(tr, val, is_single_col) {
+    var td = document.createElement('td');
+    if (is_single_col) {
+        td.setAttribute('colspan', 5);
+    }
+
+    td.innerHTML = val;
+
+    tr.appendChild(td)
+  }
+
+
+function addRow(vals) {
+    let tbl = document.getElementById('tbl');
+    let tr = document.createElement('tr');
+
+    for (const val of vals){
+        addCell(tr, val, vals.length == 1);
+    }
+
+    tbl.appendChild(tr)
+}
+
+
+function addTitle(text) {
+    let div = document.createElement('div')
     div.innerHTML = text
-
     div.style['font-size'] = '40px'
-
+    div.style['font-style'] = 'bold'
     document.getElementById('body').appendChild(div)
 }
-// function addRow(col1, col2, col3) {
-//     //
-//     var tr = document.createElement("tr");
-//     tr.style["font-size"] = "40px";
 
-//     var td = document.createElement("td");
-//     td.innerHTML = col1;
-//     tr.appendChild(td);
-
-//     var td = document.createElement("td");
-//     td.innerHTML = col2;
-//     tr.appendChild(td);
-
-//     var td = document.createElement("td");
-//     td.innerHTML = col3;
-//     tr.appendChild(td);
-
-//     document.querySelectorAll('tbody')[0].appendChild(tr);
-// }
 
 // async function benchmark_jszip_compression(argument) {
 
@@ -129,20 +143,24 @@ let inputs = [
 ]
 
 async function bench_maker() {
-    addText('Starting Benchmark..')
+    //addText('Starting Benchmark..')
     await sleep(10)
+    addRow(["Test Data", "Compressor", "Compression", "Decompression", "Ratio"])
     for (const input of inputs) {
-        addText('Input: ' + input.name)
+        addRow(['Input: ' + input.name])
+        //addTitle('Input: ' + input.name)
         for (const el of compressor) {
-            bench_compression(el, input.data, input.name)
+            let comp_res = await bench_compression(el, input.data, input.name)
             await sleep(10)
-            bench_decompression(el, input.data, input.name)
+            let decomp_res = await bench_decompression(el, input.data, input.name)
+            
+            addRow([input.name, el.name, comp_res.throughput, decomp_res.throughput, comp_res.ratio])
 
             //updateGraph(bench_names, data_decomp)
             await sleep(10)
         }
     }
-    addText('Finished')
+    //addText('Finished')
 }
 
 async function bench_compression(compressor, input) {
@@ -151,7 +169,7 @@ async function bench_compression(compressor, input) {
     let total_bytes = 0
     var time0 = performance.now()
     for (let i = 0; i < 1000; i++) {
-        const compressed = compressor.compress(test_input_bytes)
+        compressor.compress(test_input_bytes)
         total_bytes += test_input_bytes.length
         if (performance.now() - time0 > 3000) {
             break
@@ -163,14 +181,18 @@ async function bench_compression(compressor, input) {
     let total_mb = total_bytes / 1000000
     let time_in_s = time_in_ms / 1000
 
-    addText(
-        compressor.name +
-            ' compression: ' +
-            (total_mb / time_in_s).toFixed(2) +
-            'MB/s' +
-            ' Ratio: ' +
-            (compressed.length / test_input_bytes.length).toFixed(2)
-    )
+    //addText(
+        //compressor.name +
+            //' compression: ' +
+            //(total_mb / time_in_s).toFixed(2) +
+            //'MB/s' +
+            //' Ratio: ' +
+            //(compressed.length / test_input_bytes.length).toFixed(2)
+    //)
+
+    let throughput=(total_mb / time_in_s).toFixed(2);
+    return { throughput: throughput + 'MB/s', ratio: (compressed.length / test_input_bytes.length).toFixed(2) }
+
 }
 let data_decomp = inputs.map((el) => ({ bench_name: el.name, stats: [] }))
 async function bench_decompression(compressor, input, input_name) {
@@ -202,14 +224,16 @@ async function bench_decompression(compressor, input, input_name) {
         data_decomp[existing_idx].stats.push(throughput)
     }
 
-    addText(
-        compressor.name +
-            ' decompression: ' +
-            throughput +
-            'MB/s' +
-            ' Ratio: ' +
-            (compressed.length / test_input_bytes.length).toFixed(2)
-    )
+    //addText(
+        //compressor.name +
+            //' decompression: ' +
+            //throughput +
+            //'MB/s' +
+            //' Ratio: ' +
+            //(compressed.length / test_input_bytes.length).toFixed(2)
+    //)
+    return { throughput: throughput + 'MB/s', ratio: (compressed.length / test_input_bytes.length).toFixed(2) }
+
 }
 
 // run()

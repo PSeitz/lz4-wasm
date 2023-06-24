@@ -2,7 +2,7 @@
 
 <div align="center">
 
-  <h1><code>lz4-wasm</code></h1>
+  <h1><code>lz4-wasm</code> and <code>lz4-wasm-nodejs</code> </h1>
 
   <strong>Extremely fast compression(200MB/s Firefox, 350Mb/s Chrome) and decompression(600MB/s Firefox, 1400Mb/s Chrome) in the browser or nodejs using wasm.</strong>
 

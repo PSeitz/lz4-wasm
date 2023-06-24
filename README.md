@@ -30,10 +30,16 @@ Input | Lib | Compression | Decrompression | Ratio
 
 ## 🚴 Usage
 
+There are two npm packages:
+* nodejs `lz4-wasm-nodejs` 
+* browser `lz4-wasm`.
+
+See usage examples in this repo for [browser](https://github.com/PSeitz/lz4-wasm/tree/main/example_project) and [nodejs](https://github.com/PSeitz/lz4-wasm/tree/main/example_project_nodejs)
+
 The wasm module exposes two function compress and decompress.
 Both accept and return UInt8Array. 
 Internally the lz4 block api is used, the length of the original input is prepended in 32-bit little endian.
-
+The wasm code is based on [lz4_flex](https://github.com/pseitz/lz4_flex)
 
 ```
 
@@ -50,7 +56,7 @@ alert(dec.decode(original))
 ```
 
 
-See https://github.com/PSeitz/lz4_flex/tree/master/lz4-wasm/example_project for usage and benchmark.
+
 
 
 ## Making New Releases

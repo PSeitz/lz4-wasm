@@ -32,7 +32,7 @@ Input | Lib | Compression | Decrompression | Ratio
 
 There are two npm packages:
 * nodejs `lz4-wasm-nodejs` 
-* browser `lz4-wasm`.
+* browser `lz4-wasm`
 
 See usage examples in this repo for [browser](https://github.com/PSeitz/lz4-wasm/tree/main/example_project) and [nodejs](https://github.com/PSeitz/lz4-wasm/tree/main/example_project_nodejs)
 
